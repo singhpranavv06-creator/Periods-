@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Periods Pain? Let's Solve This Together.</title>
+    <!-- Google Fonts for a soft, premium feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-pastel: #FFF5F5;
+            --pink-soft: #FFDEE9;
+            --lavender-soft: #B5FFFC;
+            --accent-pink: #FF8E9E;
+            --text-dark: #6C5B7B;
+            --text-muted: #9B829B;
+            --card-bg: rgba(255, 255, 255, 0.75);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #FFDEE9 0%, #B5FFFC 100%);
+            color: var(--text-dark);
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Fredoka', sans-serif;
+            color: var(--text-dark);
+        }
+
+        /* Ambient Sparkles & Petals Canvas */
+        #ambient-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* App Container */
+        .app-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        /* Screen Base */
+        .screen {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2.5rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Glassmorphic UI Elements */
+        .header-box {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 1.25rem 1.5rem;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(255, 142, 158, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            width: 100%;
+            max-width: 340px;
+            z-index: 5;
+            animation: float 4s ease-in-out infinite alternate;
+        }
+
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            z-index: 5;
+        }
+
+        .footer-box {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 5;
+            margin-top: 1rem;
+        }
+
+        /* Buttons */
+        .btn-premium {
+            background: linear-gradient(135deg, #FF8E9E 0%, #FFAAA6 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            box-shadow: 0 6px 20px rgba(255, 142, 158, 0.4);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-premium:active {
+            transform: scale(0.95);
+            box-shadow: 0 3px 10px rgba(255, 142, 158, 0.4);
+        }
+
+        .btn-nav-round {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            cursor: pointer;
+        }
+
+        /* Music Toggle */
+        .music-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 100;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            color: var(--text-dark);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* SCREEN 1: Welcome */
+        .welcome-illustration {
+            width: 180px;
+            height: 180px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(255,170,166,0.3);
+            margin-bottom: 2rem;
+            font-size: 5rem;
+            position: relative;
+            animation: float 3s ease-in-out infinite alternate;
+        }
+
+        .welcome-illustration::after {
+            content: '✨';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            animation: pulse 1.5s infinite alternate;
+        }
+
+        /* SCREEN 2: Teddy Hug */
+        .teddy-container {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .teddy-element {
+            font-size: 7.5rem;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2;
+        }
+
+        .teddy-container.hugging .teddy-element {
+            transform: scale(1.15);
+            animation: heartbeat 0.8s infinite alternate ease-in-out;
+        }
+
+        .teddy-glow {
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            background: radial-gradient(circle, rgba(255,142,158,0.4) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1;
+        }
+
+        .teddy-container.hugging .teddy-glow {
+            opacity: 1;
+        }
+
+        .hug-instruction {
+            margin-top: 1.5rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-align: center;
+            min-height: 24px;
+        }
+
+        /* SCREEN 3: Garden */
+        .garden-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .flower-pot {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.6);
+            border-radius: 20px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            transition: transform 0.3s;
+        }
+
+        .flower-pot:active {
+            transform: scale(0.95);
+        }
+
+        .flower-asset {
+            font-size: 3.5rem;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .flower-pot.bloomed .flower-asset {
+            transform: scale(1.25) rotate(10deg);
+        }
+
+        .garden-tip {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            background: white;
+            padding: 10px 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            width: 90%;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* SCREEN 4: Gift Box */
+        .gift-wrapper {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .gift-box {
+            font-size: 7rem;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .gift-wrapper:active .gift-box {
+            transform: scale(0.9);
+        }
+
+        .gift-wrapper.opened .gift-box {
+            animation: openBox 0.5s forwards;
+        }
+
+        /* SCREEN 5: Heating Pad */
+        .heating-space {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .target-cushion {
+            width: 200px;
+            height: 200px;
+            background: white;
+            border-radius: 40px;
+            border: 3px dashed var(--accent-pink);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(255,142,158,0.1);
+            transition: background 0.3s;
+        }
+
+        .target-cushion.hovered {
+            background: #FFEBF0;
+        }
+
+        .target-cushion .cushion-emoji {
+            font-size: 4.5rem;
+            opacity: 0.7;
+        }
+
+        .target-cushion .label {
+            font-size: 0.85rem;
+            color: var(--accent-pink);
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        .draggable-pad {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #FF8E9E 0%, #FFAAA6 100%);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            box-shadow: 0 8px 20px rgba(255,142,158,0.4);
+            cursor: grab;
+            touch-action: none;
+            position: relative;
+            z-index: 20;
+        }
+
+        .draggable-pad:active {
+            cursor: grabbing;
+        }
+
+        .heating-space.warmed .target-cushion {
+            border-style: solid;
+            background: #FFF0F2;
+            box-shadow: 0 0 30px rgba(255,142,158,0.6);
+            animation: pulseGlow 2s infinite alternate;
+        }
+
+        .heating-space.warmed .draggable-pad {
+            position: absolute;
+            top: 55px;
+            left: 55px;
+            transform: scale(1.1);
+            box-shadow: none;
+            pointer-events: none;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.2); opacity: 1; }
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1.15); }
+            100% { transform: scale(1.22); }
+        }
+
+        @keyframes openBox {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2) rotate(-10deg); }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 20px rgba(255,142,158,0.4); }
+            100% { box-shadow: 0 0 40px rgba(255,142,158,0.8); }
+        }
+
+        /* Utilities */
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <!-- Web Audio API synthesized background tune & SFX -->
+    <button class="music-toggle" id="musicBtn" onclick="toggleMusic()">
+        <span id="musicIcon">🎵</span> <span id="musicTxt">Sound On</span>
+    </button>
+
+    <canvas id="ambient-canvas"></canvas>
+
+    <div class="app-container" id="appContainer">
+        
+        <!-- SCREEN 1: Welcome -->
+        <section class="screen">
+            <div class="header-box">
+                <h1>Periods Pain?</h1>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 5px;">Let's Solve This Together.</p>
+            </div>
+            <div class="content-area">
+                <div class="welcome-illustration">🧸</div>
+                <p style="text-align: center; max-width: 260px; font-weight: 600; line-height: 1.5;">
+                    I made a little comfort space just for you ❤️
+                </p>
+            </div>
+            <div class="footer-box">
+                <button class="btn-premium" onclick="navigateTo(1)">Let's Go ✨</button>
+            </div>
+        </section>
+
+        <!-- SCREEN 2: Teddy Hug -->
+        <section class="screen">
+            <div class="header-box">
+                <h2>Virtual Warm Hug</h2>
+            </div>
+            <div class="content-area">
+                <div class="teddy-container" id="teddyContainer">
+                    <div class="teddy-glow"></div>
+                    <div class="teddy-element" id="teddyAsset">🧸</div>
+                </div>
+                <div class="hug-instruction" id="hugInstruction">Press and hold Teddy to hug 🤍</div>
+            </div>
+            <div class="footer-box">
+                <button class="btn-nav-round" onclick="navigateTo(2)">➡️</button>
+            </div>
+        </section>
+
+        <!-- SCREEN 3: Garden -->
+        <section class="screen">
+            <div class="header-box">
+                <h2>Comfort Garden</h2>
+            </div>
+            <div class="content-area">
+                <div class="garden-grid">
+                    <div class="flower-pot" onclick="bloomFlower(this, 'You are doing incredibly well! 🌸')">
+                        <div class="flower-asset">🌱</div>
+                    </div>
+                    <div class="flower-pot" onclick="bloomFlower(this, 'It is completely okay to rest today. 🛌')">
+                        <div class="flower-asset">🌱</div>
+                    </div>
+                    <div class="flower-pot" onclick="bloomFlower(this, 'This tough moment will pass soon. ✨')">
+                        <div class="flower-asset">🌱</div>
+                    </div>
+                    <div class="flower-pot" onclick="bloomFlower(this, 'Sending you soft, gentle energy. 🤍')">
+                        <div class="flower-asset">🌱</div>
+                    </div>
+                </div>
+                <div class="garden-tip" id="gardenTip">Tap the sprouts to grow beautiful support flowers!</div>
+            </div>
+            <div class="footer-box">
+                <button class="btn-nav-round" onclick="navigateTo(3)">➡️</button>
+            </div>
+        </section>
+
+        <!-- SCREEN 4: Gift Box -->
+        <section class="screen">
+            <div class="header-box">
+                <h2>A Little Treat</h2>
+            </div>
+            <div class="content-area">
+                <div class="gift-wrapper" id="giftWrapper" onclick="openGift()">
+                    <div class="gift-box" id="giftAsset">🎁</div>
+                </div>
+                <p id="giftMessage" style="text-align: center; margin-top: 2rem; font-weight: 600; max-width: 240px; min-height: 50px;">
+                    Tap the present to unwrap a little treat!
+                </p>
+            </div>
+            <div class="footer-box">
+                <button class="btn-nav-round" onclick="navigateTo(4)">➡️</button>
+            </div>
+        </section>
+
+        <!-- SCREEN 5: Heating Pad -->
+        <section class="screen">
+            <div class="header-box">
+                <h2>Soothing Warmth</h2>
+            </div>
+            <div class="content-area">
+                <div class="heating-space" id="heatingSpace">
+                    <div class="target-cushion" id="targetCushion">
+                        <span class="cushion-emoji">✨</span>
+                        <span class="label">PLACE PAD HERE</span>
+                    </div>
+                    <div class="draggable-pad" id="dragPad">❤️</div>
+                </div>
+                <p id="warmthMessage" style="text-align: center; margin-top: 2rem; font-weight: 600; max-width: 250px; color: var(--text-muted)">
+                    Drag the warm heart pad to the cushion!
+                </p>
+            </div>
+            <div class="footer-box">
+                <button class="btn-premium" onclick="navigateTo(0)">Restart Comfort 🔄</button>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        /* Ambient Animation Engine (Canvas) */
+        const canvas = document.getElementById('ambient-canvas');
+        const ctx = canvas.getContext('2d');
+        let elements = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class AmbientElement {
+            constructor(x, y, type) {
+                this.x = x || Math.random() * canvas.width;
+                this.y = y || canvas.height + 50;
+                this.type = type || (Math.random() > 0.4 ? 'petal' : 'sparkle');
+                this.size = this.type === 'petal' ? Math.random() * 12 + 8 : Math.random() * 6 + 3;
+                this.speedY = -(Math.random() * 1.5 + 0.5);
+                this.speedX = Math.sin(Math.random() * Math.PI) * 0.5;
+                this.angle = Math.random() * 360;
+                this.spin = Math.random() * 2 - 1;
+                this.alpha = 1;
+                this.fadeRate = type ? 0.015 : 0; // fade custom temporary objects
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX + Math.sin(this.y / 30) * 0.3;
+                this.angle += this.spin;
+                if (this.fadeRate > 0) this.alpha -= this.fadeRate;
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.angle * Math.PI) / 180);
+                if (this.type === 'petal') {
+                    ctx.fillStyle = 'rgba(255, 182, 193, 0.7)';
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, this.size, this.size / 1.5, 0, 0, 2 * Math.PI);
+                    ctx.fill();
+                } else if (this.type === 'sparkle') {
+                    ctx.fillStyle = 'rgba(255, 239, 174, 0.9)';
+                    ctx.font = `${this.size * 2}px serif`;
+                    ctx.fillText('✨', -this.size, this.size);
+                } else if (this.type === 'heart') {
+                    ctx.fillStyle = 'rgba(255, 142, 158, 0.9)';
+                    ctx.font = `${this.size * 2}px serif`;
+                    ctx.fillText('❤️', -this.size, this.size);
+                } else if (this.type === 'chocolate') {
+                    ctx.font = `${this.size * 2.5}px serif`;
+                    ctx.fillText('🍫', -this.size, this.size);
+                } else if (this.type === 'steam') {
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                    ctx.font = `${this.size * 2.5}px serif`;
+                    ctx.fillText('💨', -this.size, this.size);
+                }
+                ctx.restore();
+            }
+        }
+
+        // Initialize background ambient pool
+        for(let i = 0; i < 20; i++) {
+            elements.push(new AmbientElement(Math.random()*canvas.width, Math.random()*canvas.height));
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (elements.length < 30 && Math.random() < 0.05) {
+                elements.push(new AmbientElement());
+            }
+            elements.forEach((el, index) => {
+                el.update();
+                el.draw();
+                if (el.y < -50 || el.alpha <= 0) elements.splice(index, 1);
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        /* Application Navigation Engine */
+        const container = document.getElementById('appContainer');
+        function navigateTo(idx) {
+            container.style.transform = `translateX(-${idx * 100}%)`;
+            playTone(400 + idx * 50, 'sine', 0.1);
+        }
+
+        /* Web Audio API - Comfort Tone Generator */
+        let audioCtx = null;
+        let isMusicPlaying = false;
+        let ambientInterval = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playTone(freq, type = 'sine', duration = 0.3, volume = 0.1) {
+            try {
+                initAudio();
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e) {}
+        }
+
+        function toggleMusic() {
+            initAudio();
+            const btnTxt = document.getElementById('musicTxt');
+            const btnIcon = document.getElementById('musicIcon');
+            
+            if (!isMusicPlaying) {
+                isMusicPlaying = true;
+                btnTxt.innerText = "Sound Off";
+                btnIcon.innerText = "⏸️";
+                // Continuous generative cozy lullaby
+                const notes = [261.63, 293.66, 329.63, 392.00, 440.00]; // Pentatonic soft C
+                ambientInterval = setInterval(() => {
+                    let note = notes[Math.floor(Math.random() * notes.length)];
+                    playTone(note, 'sine', 1.5, 0.04);
+                }, 1800);
+            } else {
+                isMusicPlaying = false;
+                btnTxt.innerText = "Sound On";
+                btnIcon.innerText = "🎵";
+                clearInterval(ambientInterval);
+            }
+        }
+
+        /* Screen 2: Interactive Teddy Hug Engine */
+        const teddyContainer = document.getElementById('teddyContainer');
+        const teddyAsset = document.getElementById('teddyAsset');
+        const hugInstruction = document.getElementById('hugInstruction');
+        let hugTimer;
+
+        function startHug(e) {
+            e.preventDefault();
+            teddyContainer.classList.add('hugging');
+            teddyAsset.innerText = '🤗';
+            hugInstruction.innerHTML = "Here's the warmest hug I can send. 🤍";
+            playTone(220, 'triangle', 0.5, 0.15);
+            
+            hugTimer = setInterval(() => {
+                playTone(180, 'sine', 0.2, 0.2); // Heartbeat tone simulation
+                // Spawn small hearts around teddy
+                let rect = teddyContainer.getBoundingClientRect();
+                for(let i=0; i<2; i++) {
+                    let h = new AmbientElement(rect.left + rect.width/2 + (Math.random()*60 - 30), rect.top + 30, 'heart');
+                    h.speedY = -(Math.random() * 2 + 1);
+                    elements.push(h);
+                }
+            }, 400);
+        }
+
+        function endHug() {
+            teddyContainer.classList.remove('hugging');
+            teddyAsset.innerText = '🧸';
+            hugInstruction.innerHTML = "Press and hold Teddy to hug 🤍";
+            clearInterval(hugTimer);
+        }
+
+        teddyContainer.addEventListener('mousedown', startHug);
+        teddyContainer.addEventListener('mouseup', endHug);
+        teddyContainer.addEventListener('mouseleave', endHug);
+        teddyContainer.addEventListener('touchstart', startHug);
+        teddyContainer.addEventListener('touchend', endHug);
+
+        /* Screen 3: Blooming Garden Engine */
+        function bloomFlower(pot, text) {
+            if (pot.classList.contains('bloomed')) return;
+            pot.classList.add('bloomed');
+            playTone(523.25, 'sine', 0.4, 0.08); // Sweet chime
+            
+            const flowerEmoji = ['🌸', '🌺', '🌷', '🌹'][Math.floor(Math.random() * 4)];
+            pot.querySelector('.flower-asset').innerText = flowerEmoji;
+            document.getElementById('gardenTip').innerHTML = text;
+
+            // Spawn ambient burst elements
+            let rect = pot.getBoundingClientRect();
+            for(let i=0; i<6; i++) {
+                let p = new AmbientElement(rect.left + rect.width/2, rect.top + rect.height/2, 'petal');
+                p.speedY = -(Math.random() * 3 + 1);
+                p.speedX = (Math.random() * 4 - 2);
+                elements.push(p);
+            }
+        }
+
+        /* Screen 4: Chocolate Gift Box Engine */
+        function openGift() {
+            const wrapper = document.getElementById('giftWrapper');
+            if(wrapper.classList.contains('opened')) return;
+            wrapper.classList.add('opened');
+            
+            playTone(659.25, 'sine', 0.5, 0.1);
+            document.getElementById('giftMessage').innerText = "A little sweetness for a tough day. 🍫";
+
+            let rect = wrapper.getBoundingClientRect();
+            for(let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    let c = new AmbientElement(rect.left + rect.width/2, rect.top + rect.height/2, 'chocolate');
+                    c.speedY = -(Math.random() * 4 + 2);
+                    c.speedX = (Math.random() * 6 - 3);
+                    elements.push(c);
+                    playTone(800 + (Math.random()*200), 'sine', 0.05, 0.02);
+                }, i * 60);
+            }
+        }
+
+        /* Screen 5: Drag-and-Drop Heating Pad Engine */
+        const dragPad = document.getElementById('dragPad');
+        const targetCushion = document.getElementById('targetCushion');
+        const heatingSpace = document.getElementById('heatingSpace');
+        const warmthMessage = document.getElementById('warmthMessage');
+
+        let startX = 0, startY = 0;
+        let currentX = 0, currentY = 0;
+        let isDragging = false;
+
+        dragPad.addEventListener('touchstart', dragStart, {passive: false});
+        dragPad.addEventListener('touchmove', dragMove, {passive: false});
+        dragPad.addEventListener('touchend', dragEnd);
+
+        dragPad.addEventListener('mousedown', dragStart);
+        window.addEventListener('mousemove', dragMove);
+        window.addEventListener('mouseup', dragEnd);
+
+        function dragStart(e) {
+            if(heatingSpace.classList.contains('warmed')) return;
+            isDragging = true;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            startX = clientX - currentX;
+            startY = clientY - currentY;
+            
+            if(e.cancelable) e.preventDefault();
+        }
+
+        function dragMove(e) {
+            if (!isDragging) return;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+            currentX = clientX - startX;
+            currentY = clientY - startY;
+
+            dragPad.style.transform = `translate(${currentX}px, ${currentY}px)`;
+
+            // Snap check
+            const padRect = dragPad.getBoundingClientRect();
+            const targetRect = targetCushion.getBoundingClientRect();
+
+            if (
+                padRect.left < targetRect.right &&
+                padRect.right > targetRect.left &&
+                padRect.top < targetRect.bottom &&
+                padRect.bottom > targetRect.top
+            ) {
+                targetCushion.classList.add('hovered');
+            } else {
+                targetCushion.classList.remove('hovered');
+            }
+            if(e.cancelable) e.preventDefault();
+        }
+
+        function dragEnd() {
+            if (!isDragging) return;
+            isDragging = false;
+
+            const padRect = dragPad.getBoundingClientRect();
+            const targetRect = targetCushion.getBoundingClientRect();
+
+            if (
+                padRect.left < targetRect.right &&
+                padRect.right > targetRect.left &&
+                padRect.top < targetRect.bottom &&
+                padRect.bottom > targetRect.top
+            ) {
+                // Perfect Placement Success
+                heatingSpace.classList.add('warmed');
+                targetCushion.querySelector('.cushion-emoji').innerText = '❤️';
+                targetCushion.querySelector('.label').innerText = 'WARM & COZY';
+                warmthMessage.innerText = "I wish this warmth could reach you and make you feel a little better. ❤️";
+                
+                playTone(330, 'triangle', 0.8, 0.15);
+                
+                // Continuous comforting steam particles
+                setInterval(() => {
+                    let tRect = targetCushion.getBoundingClientRect();
+                    let s = new AmbientElement(tRect.left + Math.random()*tRect.width, tRect.top + tRect.height/2, 'steam');
+                    s.speedY = -1;
+                    elements.push(s);
+                }, 600);
+            } else {
+                // Return to position
+                currentX = 0;
+                currentY = 0;
+                dragPad.style.transform = `translate(0px, 0px)`;
+                targetCushion.classList.remove('hovered');
+            }
+        }
+    </script>
+</body>
+</html>
